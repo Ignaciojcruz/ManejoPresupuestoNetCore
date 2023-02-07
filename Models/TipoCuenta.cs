@@ -1,4 +1,5 @@
 ﻿using ManejoPresupuestoNetCore.Validaciones;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,6 +11,7 @@ namespace ManejoPresupuestoNetCore.Models
         
         [Required(ErrorMessage = "El campo {0} es requerido")]
         //[PrimeraLetraMayuscula]   --> Con las validaciones a nivel de modelo no se indican los attributos acá
+        [Remote(action: "VerificaTipoCuenta", controller: "TiposCuentas")]
         public string? Nombre { get; set; }
         public int UsuarioId { get; set; }
         public int Orden { get; set; }
