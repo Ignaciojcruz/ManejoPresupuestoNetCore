@@ -21,9 +21,20 @@ namespace ManejoPresupuestoNetCore.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var usuarioId = _servicioUsuarios.obtenerUsuarioId();
+            var cuentaConTipoCuenta = await _repositorioCuenta.Buscar(usuarioId);
+
+            var modelo = cuentaConTipoCuenta
+                        .GroupBy(x => x.TipoCuenta)
+                        .Select(grupo => new IndiceCuentasViewModel
+                        {
+                            TipoCuenta = grupo.Key,
+                            Cuentas = grupo.AsEnumerable()
+                        }).ToList();
+
+            return View(modelo);
         }
 
         [HttpGet]
