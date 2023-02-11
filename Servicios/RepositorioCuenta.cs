@@ -64,5 +64,13 @@ namespace ManejoPresupuestoNetCore.Servicios
                                             WHERE Id = @Id", cuenta);
 
         }
+
+        public async Task Borrar(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"DELETE FROM Cuentas
+                                            WHERE Id = @id",
+                                            new { id });
+        }
     }
 }
