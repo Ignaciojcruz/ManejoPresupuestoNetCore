@@ -33,6 +33,14 @@ namespace ManejoPresupuestoNetCore.Servicios
                                 , new { usuarioId });            
         }
 
+        public async Task<IEnumerable<Categoria>> Obtener(int usuarioId, TipoOperacion tipoOperacionId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<Categoria>(@"
+                                SELECT * FROM Categorias where usuarioId = @usuarioId and TipoOperacionId = @TipoOperacionId "
+                                , new { usuarioId, tipoOperacionId });
+        }
+
         public async Task<Categoria> ObtenerPorId(int Id, int usuarioId)
         {
             using var connection = new SqlConnection(connectionString);

@@ -8,6 +8,7 @@ namespace ManejoPresupuestoNetCore.Servicios
         public MapperProfiles()
         {
             CreateMap<Cuenta, CuentaCreacionViewModel>();
+            CreateMap<Transaccion, TransaccionActualizacionViewModel>().ReverseMap();
         }
     }
 }
