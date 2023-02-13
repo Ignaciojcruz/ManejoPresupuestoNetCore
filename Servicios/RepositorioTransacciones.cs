@@ -31,7 +31,7 @@ namespace ManejoPresupuestoNetCore.Servicios
             transaccion.Id = id;
         }
 
-        public async Task Actualizar(Transaccion transaccion, decimal montoAnterior, int cuentaAnteriorId)
+        public async Task Actualizar(Transaccion transaccion, double montoAnterior, int cuentaAnteriorId)
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync("Transacciones_Actualizar",
