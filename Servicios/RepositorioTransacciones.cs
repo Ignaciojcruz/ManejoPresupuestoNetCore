@@ -61,6 +61,22 @@ namespace ManejoPresupuestoNetCore.Servicios
                                 new { id, usuarioId });
         }
 
+        public async Task<IEnumerable<Transaccion>> ObtenerPorCuentaId(TransaccionPorCuenta modelo)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<Transaccion>(@"
+                                SELECT t.Id, t.Monto, t.FechaTransaccion, ca.Nombre as Categoria
+		                                ,cu.Nombre as Cuenta, ca.TipoOperacionId
+                                FROM Transacciones t
+                                INNER JOIN Categorias ca on
+	                                t.CategoriaId = ca.Id
+                                INNER JOIN Cuentas cu on
+	                                t.CuentaId = cu.Id
+                                WHERE t.CuentaId = @CuentaId AND t.UsuarioId = @UsuarioId
+                                AND FechaTransaccion BETWEEN @FechaInicio AND @FechaFin"
+                                , modelo);
+        }
+
         public async Task Borrar(int id)
         {
             using var connection = new SqlConnection(connectionString);
