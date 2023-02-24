@@ -15,66 +15,28 @@ namespace ManejoPresupuestoNetCore.Controllers
         private readonly IRepositorioCuenta _repositorioCuentas;
         private readonly IRepositorioCategorias _repositorioCategorias;
         private readonly IMapper _mapper;
+        private readonly IServicioReportes _servicioReportes;
 
         public TransaccionesController(IServicioUsuarios servicioUsuarios
                                         , IRepositorioTransacciones repositorioTransacciones
                                         , IRepositorioCuenta repositorioCuenta
                                         , IRepositorioCategorias repositorioCategorias
-                                        , IMapper mapper)
+                                        , IMapper mapper
+                                        , IServicioReportes servicioReportes)
         {
             this._servicioUsuarios = servicioUsuarios;
             this._repositorioTransacciones = repositorioTransacciones;
             this._repositorioCuentas = repositorioCuenta;
             this._repositorioCategorias = repositorioCategorias;
             this._mapper = mapper;
+            this._servicioReportes = servicioReportes;
 
         }
         public async Task<IActionResult> Index(int mes, int año)
         {
-            var ussuarioId = _servicioUsuarios.obtenerUsuarioId();
+            var usuarioId = _servicioUsuarios.obtenerUsuarioId();
 
-            DateTime fechaInicio, fechaFin;
-
-            if (mes <= 0 || mes > 12 || año < 1900)
-            {
-                var hoy = DateTime.Today;
-                fechaInicio = new DateTime(hoy.Year, hoy.Month, 1);
-            }
-            else
-            {
-                fechaInicio = new DateTime(año, mes, 1);
-            }
-
-            fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
-
-            var parametro = new ParametroObtenerTransaccionesPorUsuario()
-            {
-                UsuarioId = ussuarioId,
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin
-            };
-
-            var transacciones = await _repositorioTransacciones.ObtenerPorUsuarioId(parametro);
-
-            var modelo = new ReporteTransaccionesDetalladas();
-            
-            var transaccionesPorFecha = transacciones.OrderByDescending(t => t.FechaTransaccion)
-                            .GroupBy(t => t.FechaTransaccion)
-                            .Select(grupo => new ReporteTransaccionesDetalladas.TransaccionesPorFecha()
-                            {
-                                FechaTransaccion = grupo.Key,
-                                Transacciones = grupo.AsEnumerable()
-                            });
-
-            modelo.TransaccionesAgrupadas = transaccionesPorFecha;
-            modelo.FechaInicio = fechaInicio;
-            modelo.FechaFin = fechaFin;
-
-            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
-            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
-            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
-            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
-            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
+            var modelo = await _servicioReportes.ObtenerReporteTransaccionesDetalladas(usuarioId, mes, año, ViewBag);
 
             return View(modelo);
         }
