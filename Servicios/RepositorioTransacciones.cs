@@ -94,6 +94,23 @@ namespace ManejoPresupuestoNetCore.Servicios
                                 , modelo);
         }
 
+        public async Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemana(
+            ParametroObtenerTransaccionesPorUsuario modelo)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<ResultadoObtenerPorSemana>(@"
+                                select  datediff(d, @fechaInicio, FechaTransaccion) / 7 + 1 as semana,
+                                sum(monto) as monto, cat.TipoOperacionId
+                                from Transacciones t
+                                inner join Categorias cat
+                                on cat.id = t.CategoriaId
+                                where t.UsuarioId = @usuarioId and
+                                FechaTransaccion between @fechaInicio and @fechaFin
+                                group by datediff(d, @fechaInicio, FechaTransaccion) / 7, cat.TipoOperacionId 
+                                ", modelo);
+
+        }
+
         public async Task Borrar(int id)
         {
             using var connection = new SqlConnection(connectionString);

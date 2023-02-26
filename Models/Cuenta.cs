@@ -14,7 +14,7 @@ namespace ManejoPresupuestoNetCore.Models
 
         [Display(Name = "Tipo Cuenta")]
         public int TipoCuentaId { get; set; }
-        public double Balance { get; set; }
+        public int Balance { get; set; }
 
         [StringLength(maximumLength: 1000)]
         public string Descripcion { get; set; }

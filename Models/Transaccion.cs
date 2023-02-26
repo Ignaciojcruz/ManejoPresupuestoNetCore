@@ -13,7 +13,7 @@ namespace ManejoPresupuestoNetCore.Models
         [DataType(DataType.Date)]
         public DateTime FechaTransaccion { get; set; } = DateTime.Today;
                 
-        public double Monto { get; set; }
+        public int Monto { get; set; }
                 
         [Range(1, maximum: int.MaxValue, ErrorMessage = "Debe seleccionar una categoría")]
         [Display(Name = "Categoría")]
