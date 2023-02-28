@@ -108,8 +108,22 @@ namespace ManejoPresupuestoNetCore.Servicios
                                 FechaTransaccion between @fechaInicio and @fechaFin
                                 group by datediff(d, @fechaInicio, FechaTransaccion) / 7, cat.TipoOperacionId 
                                 ", modelo);
-
         }
+
+        public async Task<IEnumerable<ResultadoObtenerPorMes>> ObtenerPorMes(int usuarioId, int año)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<ResultadoObtenerPorMes>(@"
+                                select month(t.FechaTransaccion) as mes,
+                                sum(monto) as monto, cat.TipoOperacionId
+                                from Transacciones t
+                                inner join Categorias cat on
+	                                t.categoriaId = cat.id
+                                where t.UsuarioId = @usuarioId and year(FechaTransaccion) = @año
+                                group by month(FechaTransaccion), cat.TipoOperacionId
+                                ", new {usuarioId, año});
+        }
+
 
         public async Task Borrar(int id)
         {

@@ -1,5 +1,6 @@
 ﻿using ManejoPresupuestoNetCore.Validaciones;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace ManejoPresupuestoNetCore.Models
 {
@@ -14,7 +15,7 @@ namespace ManejoPresupuestoNetCore.Models
 
         [Display(Name = "Tipo Cuenta")]
         public int TipoCuentaId { get; set; }
-        public int Balance { get; set; }
+        public decimal Balance { get; set; }
 
         [StringLength(maximumLength: 1000)]
         public string Descripcion { get; set; }

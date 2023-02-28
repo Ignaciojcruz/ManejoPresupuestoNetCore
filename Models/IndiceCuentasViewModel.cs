@@ -6,7 +6,7 @@
 
         public IEnumerable<Cuenta> Cuentas { get; set; }
 
-        public int Balance => Cuentas.Sum(x => x.Balance);
+        public decimal Balance => Cuentas.Sum(x => x.Balance);
 
     }
 }
