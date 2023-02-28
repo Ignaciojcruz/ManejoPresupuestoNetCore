@@ -82,7 +82,7 @@ namespace ManejoPresupuestoNetCore.Servicios
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Transaccion>(@"
                                 SELECT t.Id, t.Monto, t.FechaTransaccion, ca.Nombre as Categoria
-		                                ,cu.Nombre as Cuenta, ca.TipoOperacionId
+		                                ,cu.Nombre as Cuenta, ca.TipoOperacionId, Nota
                                 FROM Transacciones t
                                 INNER JOIN Categorias ca on
 	                                t.CategoriaId = ca.Id
