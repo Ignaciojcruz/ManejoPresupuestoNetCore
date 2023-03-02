@@ -256,6 +256,45 @@ namespace ManejoPresupuestoNetCore.Controllers
             return View();
         }
 
+        public async Task<JsonResult> ObtenerTransaccionesCalendario(DateTime start, DateTime end)
+        {
+            var usuarioId = _servicioUsuarios.obtenerUsuarioId();
+
+            var transacciones = await _repositorioTransacciones.ObtenerPorUsuarioId(
+                new ParametroObtenerTransaccionesPorUsuario
+                {
+                    UsuarioId = usuarioId,
+                    FechaInicio = start,
+                    FechaFin = end
+                });
+
+            var eventoCalenderio = transacciones.Select(t => new EventoCalendario()
+            {
+                Title = t.Monto.ToString("N"),
+                Start = t.FechaTransaccion.ToString("yyyy-MM-dd"),
+                End = t.FechaTransaccion.ToString("yyyy-MM-dd"),
+                Color = (t.TipoOperacionId == TipoOperacion.Gasto) ? "Red" : null
+            });
+
+            return Json(eventoCalenderio);
+
+        }
+
+        public async Task<JsonResult> ObtenerTransaccionesPorFecha(DateTime fecha)
+        {
+            var usuarioId = _servicioUsuarios.obtenerUsuarioId();
+
+            var transacciones = await _repositorioTransacciones.ObtenerPorUsuarioId(
+                new ParametroObtenerTransaccionesPorUsuario
+                {
+                    UsuarioId = usuarioId,
+                    FechaInicio = fecha,
+                    FechaFin = fecha
+                });
+
+            return Json(transacciones);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Crear()
         {
