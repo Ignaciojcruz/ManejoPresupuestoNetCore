@@ -36,12 +36,22 @@ namespace ManejoPresupuestoNetCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(PaginacionViewModel paginacionViewModel)
         {
             var usuarioId = _servicioUsuarios.obtenerUsuarioId();
-            var categoria = await _repositorioCategorias.Obtener(usuarioId);
+            var categorias = await _repositorioCategorias.Obtener(usuarioId, paginacionViewModel);
+            var totalCategorias = await _repositorioCategorias.Contar(usuarioId);
 
-            return View(categoria);
+            var respuestaVM = new PaginacionRespuesta<Categoria>
+            {
+                Elementos = categorias,
+                Pagina = paginacionViewModel.Pagina,
+                RecordsPorPagina = paginacionViewModel.RecordsPorPagina,
+                CantidadTotalRecords = totalCategorias,
+                BaseURL = "/categorias"
+            };
+
+            return View(respuestaVM);
         }
 
         [HttpGet]
