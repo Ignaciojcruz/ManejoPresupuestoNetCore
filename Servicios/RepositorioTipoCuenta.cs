@@ -29,13 +29,13 @@ namespace ManejoPresupuestoNetCore.Servicios
             
         }
 
-        public async Task<bool> Existe(string nombre, int usuarioId)
+        public async Task<bool> Existe(string nombre, int usuarioId, int id = 0)
         {
             using var connection = new SqlConnection(connectionString);
             var existe = await connection.QueryFirstOrDefaultAsync<int>(@"
                                                     SELECT 1 FROM TiposCuentas
-                                                    WHERE Nombre = @Nombre AND usuarioId = @UsuarioId",
-                                                    new { nombre, usuarioId });
+                                                    WHERE Nombre = @Nombre AND usuarioId = @UsuarioId AND Id <> @id",
+                                                    new { nombre, usuarioId, id });
             return existe == 1;
         }
 

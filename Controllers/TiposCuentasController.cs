@@ -56,10 +56,10 @@ namespace ManejoPresupuestoNetCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerificaTipoCuenta(string nombre)
+        public async Task<IActionResult> VerificaTipoCuenta(string nombre, int id)
         {
             var usuarioId = _servicioUsuarios.obtenerUsuarioId();
-            var yaExisteTipoCuenta = await repositorio.Existe(nombre, usuarioId);
+            var yaExisteTipoCuenta = await repositorio.Existe(nombre, usuarioId, id);
 
             if(yaExisteTipoCuenta)
             {

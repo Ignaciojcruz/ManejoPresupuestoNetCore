@@ -11,8 +11,9 @@ namespace ManejoPresupuestoNetCore.Models
         
         [Required(ErrorMessage = "El campo {0} es requerido")]
         //[PrimeraLetraMayuscula]   --> Con las validaciones a nivel de modelo no se indican los attributos acá
-        [Remote(action: "VerificaTipoCuenta", controller: "TiposCuentas")]
-        public string? Nombre { get; set; }
+        [Remote(action: "VerificaTipoCuenta", controller: "TiposCuentas",
+                    AdditionalFields = nameof(Id))]
+        public string Nombre { get; set; }
         public int UsuarioId { get; set; }
         public int Orden { get; set; }
 
